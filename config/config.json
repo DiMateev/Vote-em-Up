@@ -1,0 +1,12 @@
+{
+  "test": {
+    "PORT": 3000,
+    "MONGODB_URI": "mongodb://localhost:27017/TheVotingAppTest",
+    "SECRET": "12jk2jh3232rowefhsodapw9ur39rjr"
+  },
+  "development": {
+    "PORT": 3000,
+    "MONGODB_URI": "mongodb://localhost:27017/TheVotingApp",
+    "SECRET": "fhgsiofu3498f8y38fh3p82vp4yvfhsvlas9v"
+  }
+}
