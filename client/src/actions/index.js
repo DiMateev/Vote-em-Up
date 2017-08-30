@@ -13,7 +13,8 @@ import {
   DELETE_SURVEY
 } from './types';
 
-const API_URL = process.env.API_URL || 'http://localhost:3001';
+const API_URL = '';
+// http://localhost:3001
 
 function handleGoodRequest(response ,dispatch) {
   // - Update state to indicate user is authenticated
