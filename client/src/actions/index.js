@@ -1,5 +1,4 @@
 import axios from 'axios';
-import createBrowserHistory from 'history/createBrowserHistory';
 import _ from 'lodash';
 
 import { 
@@ -14,7 +13,7 @@ import {
   DELETE_SURVEY
 } from './types';
 
-const history = createBrowserHistory();
+const API_URL = process.env.API_URL || 'http://localhost:3001';
 
 function handleGoodRequest(response ,dispatch) {
   // - Update state to indicate user is authenticated
@@ -22,13 +21,13 @@ function handleGoodRequest(response ,dispatch) {
   // - Save the JWT token
   localStorage.setItem('x-auth', response.data.token);
   // Redirect to the route /feature
-  history.push('/create-survey');
+  this.props.history.push('/create-survey');
 }
 
 export function signinUser({ email, password }) {
   return function(dispatch) {
     // Submit email/password to the server
-    axios.post(`/api/user/signin`, { email, password })
+    axios.post(`${API_URL}/api/user/signin`, { email, password })
       .then(res => handleGoodRequest(res, dispatch))
       .catch(() => {
         // If request is bad...
@@ -40,7 +39,7 @@ export function signinUser({ email, password }) {
 
 export function signupUser({ email, password }) {
   return function(dispatch) {
-    axios.post(`/api/user/signup`, { email, password })
+    axios.post(`${API_URL}/api/user/signup`, { email, password })
       .then(response => handleGoodRequest(response, dispatch))
       .catch(({ response }) => dispatch(authError(response.data.error)));
   }
@@ -61,7 +60,7 @@ export function signoutUser() {
 
 export function fetchAllSurveys() {
   return function(dispatch) {
-    axios.get(`/api/survey`)
+    axios.get(`${API_URL}/api/survey`)
       .then(response => dispatch({
         type: FETCH_SURVEYS,
         payload: response.data
@@ -72,7 +71,7 @@ export function fetchAllSurveys() {
 
 export function fetchSurvey(id) {
   return function(dispatch) {
-    axios.get(`/api/survey/${id}`)
+    axios.get(`${API_URL}/api/survey/${id}`)
       .then(response => {
         dispatch({
           type: FETCH_SURVEY,
@@ -92,7 +91,7 @@ export function deselectSurvey() {
 export function createSurvey({question, values}) {
   const options = _.values(values);
   return function(dispatch) {
-    axios.post(`/api/survey/new`, {
+    axios.post(`${API_URL}/api/survey/new`, {
       question, 
       options
     }, {
@@ -101,7 +100,7 @@ export function createSurvey({question, values}) {
       }
     })
       .then(response => {
-        history.push(`/survey/${response.data}`)
+        this.props.history.push(`/survey/${response.data}`)
       })
       .catch();
   }
@@ -109,7 +108,7 @@ export function createSurvey({question, values}) {
 
 export function handleVote({ optionIndex, surveyId }) {
   return function(dispatch) {
-    axios.patch(`/api/survey/vote/${surveyId}`, {
+    axios.patch(`${API_URL}/api/survey/vote/${surveyId}`, {
       optionIndex
     })
       .then(response => {
@@ -124,7 +123,7 @@ export function handleVote({ optionIndex, surveyId }) {
 
 export function fetchMySurveys() {
   return function(dispatch) {
-    axios.get(`/api/survey/user`, {
+    axios.get(`${API_URL}/api/survey/user`, {
       headers: {
         'x-auth': localStorage.getItem('x-auth')
       }
@@ -141,7 +140,7 @@ export function fetchMySurveys() {
 
 export function deleteSurvey(id) {
   return function(dispatch) {
-    axios.delete(`/api/survey/${id}`, {
+    axios.delete(`${API_URL}/api/survey/${id}`, {
       headers: {
         'x-auth': localStorage.getItem('x-auth')
       }

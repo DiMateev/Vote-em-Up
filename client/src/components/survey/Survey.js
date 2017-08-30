@@ -71,6 +71,7 @@ const Survey = (props) => {
           <ResultsChart options={options} />
         </div>
       </SurveyBody>
+      <div>Share this survey with your friends: {window.location.href}</div>
     </SurveyContainer>
   );
 }

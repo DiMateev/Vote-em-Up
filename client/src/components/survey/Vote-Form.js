@@ -33,6 +33,11 @@ class VoteForm extends React.Component {
     this.props.handleVote({ optionIndex, surveyId });
   }
 
+  handleNewOption(e) {
+    e.preventDefault();
+    console.log('new option added!');
+  }
+
   renderOptions(options) {
     return options.map(option => {
       return (
@@ -56,6 +61,7 @@ class VoteForm extends React.Component {
         <h2>Choose your answer:</h2>
         {this.renderOptions(this.props.survey.options)}
         <button className='btn btn-primary'>Vote</button>
+        <button onClick={this.handleNewOption} className='btn btn-secondary'>Add different option</button>
       </form>
     )
   }

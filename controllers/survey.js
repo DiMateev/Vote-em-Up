@@ -61,8 +61,6 @@ exports.deleteSurvey = async (req, res, next) => {
 exports.voteForOption = async (req, res, next) => {
   const optionIndex = req.body.optionIndex;
   const id = req.params.id;
-  console.log(req.headers['x-forwarded-for']);
-  console.log(req.headers);
 
   if (!optionIndex && optionIndex !== 0) { return res.status(400).send(); }
 
@@ -71,7 +69,7 @@ exports.voteForOption = async (req, res, next) => {
       ['options.' + optionIndex + '.count']: 1
     },
     $push: {
-      voters_ip: '1'
+      voters_ip: req.ip
     }
   }, {new: true});
   res.send({survey});

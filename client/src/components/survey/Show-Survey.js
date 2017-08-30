@@ -8,7 +8,6 @@ import Survey from './Survey';
 
 class showSurvey extends React.Component {
   componentWillMount() {
-    console.log('showSurvey:', this.props);
     this.props.fetchSurvey(this.props.match.params.id);
   }
 
