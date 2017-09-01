@@ -69,7 +69,7 @@ exports.voteForOption = async (req, res, next) => {
       ['options.' + optionIndex + '.count']: 1
     },
     $push: {
-      voters_ip: request.headers['x-forwarded-for']
+      voters_ip: req.headers['x-forwarded-for']
     }
   }, {new: true});
   res.send({survey});
