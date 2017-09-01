@@ -1,16 +1,21 @@
-a {
+a.nav_menu, a {
   padding: 0 10px;
   color: rgb(140,140,140);
   transition: 0.5s ease;
   cursor: pointer;
 }
 
-a:hover {
+a.nav_menu:hover {
   color: rgb(110,110,110);
   text-decoration: underline;
 }
 
-a.active {
+a.nav_menu.active:hover {
+  color: rgb(110,110,110);
+  text-decoration: underline;
+}
+
+a.nav_menu.active {
   color: rgb(35,35,35);
   text-decoration: underline;
 }

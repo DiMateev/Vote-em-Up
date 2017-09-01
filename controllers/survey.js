@@ -69,6 +69,23 @@ exports.voteForOption = async (req, res, next) => {
       ['options.' + optionIndex + '.count']: 1
     },
     $push: {
+      voters_ip: request.headers['x-forwarded-for']
+    }
+  }, {new: true});
+  res.send({survey});
+}
+
+exports.voteForNewOption = async (req, res, next) => {
+  const newOption = req.body.newOption;
+  const id = req.params.id;
+
+  if (!newOption) { res.status(400).send(); }
+  const survey = await Survey.findOneAndUpdate({ "_id": id}, {
+    $push: {
+      options: {
+        option: newOption,
+        count: 1
+      },    
       voters_ip: req.ip
     }
   }, {new: true});

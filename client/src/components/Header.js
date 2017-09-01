@@ -3,6 +3,10 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 
+const NavMenu = styled.ul`
+  display: block;
+`
+
 const HeaderBrand = styled.div`
   text-align: center;
   background-color: rgb(120, 207, 255);
@@ -10,7 +14,7 @@ const HeaderBrand = styled.div`
   color: white;
 
   > h1 {
-    font-family: 'monospace';
+    font-family: 'Baloo Bhaijaan', cursive;
     margin: 0;
   }
 `
@@ -52,14 +56,14 @@ class Header extends React.Component {
   render() {
     return (
       <nav>
-        <ul className='nav'>
+        <NavMenu className='nav'>
           <HeaderLink className='nav-item' key={1}>
             <Link to='/' className='nav-link'>Home</Link>
           </HeaderLink>
           {this.renderLinks()}
-        </ul>
+        </NavMenu>
         <HeaderBrand>
-          <h1>The Voting App</h1>
+          <h1>Vote'em Up</h1>
         </HeaderBrand>
       </nav>
     );

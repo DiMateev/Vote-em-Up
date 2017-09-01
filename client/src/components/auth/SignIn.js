@@ -117,7 +117,9 @@ const renderField = ({ input, label, type, meta: { touched, error } }) => (
 
 class Signin extends React.Component {
   handleFormSubmit({ email, password }) {
-    this.props.signinUser({ email, password });
+    this.props.signinUser({ email, password })
+      .then(() => { this.props.history.push('/')})
+      .catch();
   }
 
   renderAlert() {
@@ -144,9 +146,6 @@ class Signin extends React.Component {
         </SubmitSection>
         <AlternativeSignIn>
           <span>Sign In With:</span>
-          <img src='/src/resourses/facebook.png' alt='facebook logo' title='Facebook' />
-          <img src='/src/resourses/github.png' alt='github logo' title='GitHub' />
-          <img src='/src/resourses/google+.png' alt='google+ logo' title='Google+' />
         </AlternativeSignIn>
       </Form>
     );

@@ -30,15 +30,17 @@ const Fieldset = styled.fieldset`
   }
 `
 
-const renderField = ({ input, label, type, meta: { touched, error } }) => (
+const renderField = ({ input, label, type, maxLength, meta: { touched, error } }) => {
+  return (
   <Fieldset>
     <label>{label}</label>
     <div>
-      <input {...input} type={type} className='form-control' />
+      <input {...input} type={type} maxLength={maxLength} className='form-control' />
       {touched && error && <span className='text-danger'>{error}</span>}
     </div>
   </Fieldset>
-);
+  );
+};
 
 class createSurvey extends React.Component {
   constructor(props) {
@@ -59,7 +61,9 @@ class createSurvey extends React.Component {
   }
 
   handleFormSubmit({question, ...values}) {
-    this.props.createSurvey({question, values});
+    this.props.createSurvey({question, values})
+      .then((response) => this.props.history.push(`/survey/${response.data}`))
+      .catch();
   }
 
   render() {
@@ -68,9 +72,20 @@ class createSurvey extends React.Component {
     return (
       <div>
         <form onSubmit={handleSubmit(this.handleFormSubmit.bind(this))}>
-          <Field type='text' name='question' label='Your question: ' component={renderField} />
+          <Field 
+            type='text' 
+            name='question'
+            maxLength='200'
+            label='Your question: ' 
+            component={renderField} />
           {this.state.options.map(option => 
-            <Field type='text' key={option} name={`option${option}`} label={`Option ${option}: `} component={renderField} />
+            <Field 
+              type='text'
+              maxLength='35' 
+              key={option} 
+              name={`option${option}`} 
+              label={`Option ${option}: `} 
+              component={renderField} />
           )}
           <button className='btn btn-secondary' onClick={this.addOption}>Add option</button>
           <button className='btn btn-primary' type='submit'>Post Survey</button>
@@ -80,8 +95,17 @@ class createSurvey extends React.Component {
   }
 }
 
+function validate(values) {
+  const error = {};
+  console.log(values);
+
+
+  return error;
+}
+
 const createSurveyForm = reduxForm({
-  form: 'create-survey'
+  form: 'create-survey',
+  validate
 })(createSurvey);
 
 export default connect(null, actions)(createSurveyForm);

@@ -17,5 +17,6 @@ module.exports = function(app) {
   app.get('/api/survey/:id', Survey.fetchSingleSurvey);
   app.delete('/api/survey/:id', requireAuth, Survey.deleteSurvey);
   app.patch('/api/survey/vote/:id', Survey.voteForOption);
+  app.patch('/api/survey/newVote/:id', Survey.voteForNewOption);
   app.patch('/api/survey/addoption/:id', requireAuth, Survey.addOption);
 }

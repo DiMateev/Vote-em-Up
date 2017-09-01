@@ -71,7 +71,9 @@ const renderField = ({ input, label, type, meta: { touched, error } }) => (
 class Signup extends React.Component {
 
   handleFormSubmit({ email, password }) {
-    this.props.signupUser({ email, password });
+    this.props.signupUser({ email, password })
+    .then(() => { this.props.history.push('/')})
+    .catch();
   }
 
   renderAlert() {
@@ -111,6 +113,8 @@ function validate(values) {
   
   if (!values.password) {
     errors.password = 'Field is required!';
+  } else if (/\s/.test(values.password)) {
+    errors.password = 'Password must not contain white spaces';
   } else if (values.password.length < 6) {
     errors.password = 'Password must be at least 6 symbols long!';
   } else if (values.password !== values.password_confirm) {

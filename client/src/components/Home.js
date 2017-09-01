@@ -23,15 +23,20 @@ const Header = styled.div`
   color: white;
   padding: 20px;
 
+  > a {
+    font-size: 1.1em;
+  }
+
   > h3 {
-    font-size: 1.2em;
-    margin-top: 20px;
+    font-size: 1em;
+    margin-top: 10px;
+    line-height: 1.5em;
   }
 `
 
 const Body = styled.div`
   position: relative;
-  height: 491px;
+  max-height: 491px;
   width: 90vw;
   overflow: auto;
   margin: 15px auto;
@@ -63,12 +68,12 @@ class Home extends React.Component {
       <h2>
         <a 
           id='menu_all' 
-          className={this.props.survey.filter ? '' : 'active'}
+          className={this.props.survey.filter ? 'nav_menu' : 'nav_menu active'}
           onClick={this.handleMenuClicks}>all surveys</a>
         &nbsp;|&nbsp;
         <a 
           id='menu_my' 
-          className={this.props.survey.filter ? 'active' : ''} 
+          className={this.props.survey.filter ? 'nav_menu active' : 'nav_menu'} 
           onClick={this.handleMenuClicks}>my surveys</a>
       </h2>
     )
@@ -78,12 +83,12 @@ class Home extends React.Component {
     return (
       <Container>
         <Header>
-          <Link to='/create-survey' className='btn btn-primary'>Create a Survey</Link>
+          <Link to='/create-survey' className='btn btn-primary'>Create a new Survey</Link>
           <h3>or<br />participate in one</h3>
         </Header>
         {this.props.auth.authenticated
           ? this.renderSurveysMenu()
-          : <h2>open surveys:</h2>}
+          : <h2>open surveys</h2>}
         <Body>
           <ShowAllSurveys { ...this.props } />
         </Body>

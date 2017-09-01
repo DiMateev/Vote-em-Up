@@ -8,3 +8,12 @@ button.delete {
   top: 5px;
   z-index: 100;
 }
+
+@media (max-width: 767px) {
+  button.delete {
+    top: 1px;
+    right: 1px;
+    line-height: 12px;
+    padding: 1px 5px;
+  }
+}

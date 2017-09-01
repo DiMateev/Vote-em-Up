@@ -5,6 +5,14 @@ import styled from 'styled-components';
 
 import * as actions from '../../actions';
 
+const Form = styled.form`
+  border-radius: 5px;
+  border: 1px solid rgb(220,220,220);
+  padding: 1em;
+
+  >h2 { font-family: 'Baloo Bhaijaan', cursive; }
+`
+
 const Fieldset = styled.fieldset`
   border: 1px solid rgb(230,230,230);
   padding: 10px;
@@ -33,9 +41,15 @@ class VoteForm extends React.Component {
     this.props.handleVote({ optionIndex, surveyId });
   }
 
-  handleNewOption(e) {
+  handleNewOption = (e) => {
     e.preventDefault();
-    console.log('new option added!');
+    const surveyId = this.props.survey._id;
+    let option = window.prompt('Option you want to vote for:');
+    if (option) { option = option.trim(); }
+    if (option.length > 0) {
+      if (option.length > 35) { return alert('Option must be equal or less than 35 characters!'); }
+      this.props.addNewOption({ option, surveyId });
+    }
   }
 
   renderOptions(options) {
@@ -57,12 +71,12 @@ class VoteForm extends React.Component {
     const { handleSubmit } = this.props;
     
     return (
-      <form className='form-group' onSubmit={handleSubmit(this.handleSubmitForm.bind(this))}>
-        <h2>Choose your answer:</h2>
-        {this.renderOptions(this.props.survey.options)}
+      <Form onSubmit={handleSubmit(this.handleSubmitForm.bind(this))}>
+        <h2>I vote for:</h2>
+          {this.renderOptions(this.props.survey.options)}
         <button className='btn btn-primary'>Vote</button>
         <button onClick={this.handleNewOption} className='btn btn-secondary'>Add different option</button>
-      </form>
+      </Form>
     )
   }
 }

@@ -14,21 +14,18 @@ import {
 } from './types';
 
 const API_URL = '';
-// http://localhost:3001
 
 function handleGoodRequest(response ,dispatch) {
   // - Update state to indicate user is authenticated
   dispatch({ type: AUTH_USER });
   // - Save the JWT token
   localStorage.setItem('x-auth', response.data.token);
-  // Redirect to the route /feature
-  this.props.history.push('/create-survey');
 }
 
 export function signinUser({ email, password }) {
   return function(dispatch) {
     // Submit email/password to the server
-    axios.post(`${API_URL}/api/user/signin`, { email, password })
+    return axios.post(`${API_URL}/api/user/signin`, { email, password })
       .then(res => handleGoodRequest(res, dispatch))
       .catch(() => {
         // If request is bad...
@@ -40,7 +37,7 @@ export function signinUser({ email, password }) {
 
 export function signupUser({ email, password }) {
   return function(dispatch) {
-    axios.post(`${API_URL}/api/user/signup`, { email, password })
+    return axios.post(`${API_URL}/api/user/signup`, { email, password })
       .then(response => handleGoodRequest(response, dispatch))
       .catch(({ response }) => dispatch(authError(response.data.error)));
   }
@@ -91,19 +88,16 @@ export function deselectSurvey() {
 
 export function createSurvey({question, values}) {
   const options = _.values(values);
+  
   return function(dispatch) {
-    axios.post(`${API_URL}/api/survey/new`, {
+    return axios.post(`${API_URL}/api/survey/new`, {
       question, 
       options
     }, {
       headers: {
         'x-auth': localStorage.getItem('x-auth')
       }
-    })
-      .then(response => {
-        this.props.history.push(`/survey/${response.data}`)
-      })
-      .catch();
+    });
   }
 }
 
@@ -111,6 +105,21 @@ export function handleVote({ optionIndex, surveyId }) {
   return function(dispatch) {
     axios.patch(`${API_URL}/api/survey/vote/${surveyId}`, {
       optionIndex
+    })
+      .then(response => {
+        dispatch({
+          type: UPDATE_SURVEY,
+          payload: response.data.survey
+        });
+      })
+      .catch();
+  }
+}
+
+export function addNewOption({ option, surveyId }) {
+  return function(dispatch) {
+    axios.patch(`${API_URL}/api/survey/newVote/${surveyId}`, {
+      newOption: option
     })
       .then(response => {
         dispatch({
