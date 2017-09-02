@@ -97,8 +97,6 @@ class createSurvey extends React.Component {
 
 function validate(values) {
   const error = {};
-  console.log(values);
-
 
   return error;
 }

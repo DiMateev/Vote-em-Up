@@ -35,5 +35,5 @@ class ShowAllSurveys extends React.Component {
 
 }
  
-const ShowAllSurveysWithLoader = LoaderHOC('survey')(ShowAllSurveys);
+const ShowAllSurveysWithLoader = LoaderHOC(['survey'])(ShowAllSurveys);
 export default connect(null, actions)(ShowAllSurveysWithLoader);

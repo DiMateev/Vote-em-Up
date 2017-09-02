@@ -77,14 +77,47 @@ const SurveyBody = styled.div`
 
 `
 
+const Vote = styled.div`
+  border-radius: 5px;
+  text-align: center;
+  padding: 1em;
+
+  > h2 { font-family: 'Baloo Bhaijaan', cursive; }
+  > h4 { color: rgb(110,110,110); font-size: 1.5em; }
+`
+
+const VotedFor = (props) => {
+  const { options, voters, index} = props;
+  const optionIndex = voters[index].option;
+  return (
+    <Vote>
+      <h2>You have voted for:</h2>
+      <h4>{options[optionIndex].option}</h4>
+    </Vote>
+  )
+}
+
 const Survey = (props) => {
-  const { question, options } = props.survey;
+  const { question, options, voters } = props.survey;
+  const voters_ip = voters.map(voter => voter.ip);
+  const { userList, ip } = props;
   return (
     <SurveyContainer>
       <h1>{question}</h1>
       <SurveyBody>
-        <ResultsAggregate options={options} />
-        <VoteForm survey={props.survey}/>
+        {
+          (userList.indexOf(props.survey._id) > -1)
+            ? <ResultsAggregate options={options} />
+            : ''
+        }
+        {
+          (voters_ip.indexOf(ip) > -1)
+            ? <VotedFor 
+                options={props.survey.options}
+                voters={props.survey.voters}
+                index={voters_ip.indexOf(ip)} />
+            : <VoteForm survey={props.survey}/>
+        }
         <div className='graph'>
           <ResultsChart options={options} />
         </div>
@@ -95,4 +128,4 @@ const Survey = (props) => {
 }
 
 
-export default LoaderHOC('survey')(Survey);
+export default LoaderHOC(['userList', 'survey', 'ip'])(Survey);

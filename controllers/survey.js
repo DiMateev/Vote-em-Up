@@ -1,6 +1,7 @@
 const Survey = require('../models/survey');
+const User = require('../models/user');
 
-exports.createNew = (req, res, next) => {
+exports.createNew = async (req, res, next) => {
   const userId = req.user._id;
   const options = req.body.options.map((option) => {
     return { 
@@ -16,6 +17,14 @@ exports.createNew = (req, res, next) => {
   });
 
   newSurvey.save();
+
+  // Add survey id to user surveys list
+  await User.findOneAndUpdate({ _id: userId }, {
+    $push: {
+      surveys: newSurvey._id
+    }
+  }, {new: true});
+
   res.json(newSurvey._id);
 }
 
@@ -34,8 +43,9 @@ exports.fetchAllSurveys = (req, res, next) => {
 
 exports.fetchSingleSurvey = (req, res, next) => {
   const id = req.params.id;
+  const ip = req.headers['x-forwarded-for'] || '127.0.0.1';
   Survey.findById(id).then((survey) => {
-    return res.send(survey);
+    return res.send({survey, ip});
   });
 }
 
@@ -61,6 +71,7 @@ exports.deleteSurvey = async (req, res, next) => {
 exports.voteForOption = async (req, res, next) => {
   const optionIndex = req.body.optionIndex;
   const id = req.params.id;
+  const ip = req.headers['x-forwarded-for'] || '127.0.0.1';
 
   if (!optionIndex && optionIndex !== 0) { return res.status(400).send(); }
 
@@ -69,15 +80,19 @@ exports.voteForOption = async (req, res, next) => {
       ['options.' + optionIndex + '.count']: 1
     },
     $push: {
-      voters_ip: req.headers['x-forwarded-for']
+      voters: {
+        ip,
+        option: optionIndex
+      }
     }
   }, {new: true});
-  res.send({survey});
+  res.send({survey, ip});
 }
 
 exports.voteForNewOption = async (req, res, next) => {
-  const newOption = req.body.newOption;
+  const { newOption, optionIndex } = req.body;
   const id = req.params.id;
+  const ip = req.headers['x-forwarded-for'] || '127.0.0.1';
 
   if (!newOption) { res.status(400).send(); }
   const survey = await Survey.findOneAndUpdate({ "_id": id}, {
@@ -86,10 +101,13 @@ exports.voteForNewOption = async (req, res, next) => {
         option: newOption,
         count: 1
       },    
-      voters_ip: req.ip
+      voters: {
+        ip,
+        option: optionIndex
+      }
     }
   }, {new: true});
-  res.send({survey});
+  res.send({survey, ip});
 }
 
 exports.addOption = async (req, res, next) => {

@@ -44,11 +44,12 @@ class VoteForm extends React.Component {
   handleNewOption = (e) => {
     e.preventDefault();
     const surveyId = this.props.survey._id;
+    const optionIndex = this.props.survey.options.length;
     let option = window.prompt('Option you want to vote for:');
     if (option) { option = option.trim(); }
     if (option.length > 0) {
       if (option.length > 35) { return alert('Option must be equal or less than 35 characters!'); }
-      this.props.addNewOption({ option, surveyId });
+      this.props.addNewOption({ option, optionIndex, surveyId });
     }
   }
 
@@ -75,7 +76,15 @@ class VoteForm extends React.Component {
         <h2>I vote for:</h2>
           {this.renderOptions(this.props.survey.options)}
         <button className='btn btn-primary'>Vote</button>
-        <button onClick={this.handleNewOption} className='btn btn-secondary'>Add different option</button>
+        {
+          (localStorage.getItem('x-auth'))
+          ? <button 
+              onClick={this.handleNewOption} 
+              className='btn btn-secondary'>
+              Add different option
+            </button>
+          : ''
+        }
       </Form>
     )
   }

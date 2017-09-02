@@ -17,13 +17,20 @@ class showSurvey extends React.Component {
 
   render() {
     return (
-      <Survey survey={this.props.survey.selectedSurvey} />
+      <Survey 
+        survey={this.props.survey.selectedSurvey}
+        ip={this.props.survey.request_ip}
+        userList={
+          (localStorage.getItem('x-auth')) 
+          ? this.props.user.surveysList
+          : []
+        } />
     )
   }
 }
 
 const mapStateToProps = (state) => {
-  return { survey: state.survey };
+  return { survey: state.survey, user: state.auth };
 }
 
 export default connect(mapStateToProps, actions)(showSurvey);

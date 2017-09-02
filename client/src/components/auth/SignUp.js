@@ -36,13 +36,13 @@ const Form = styled.form`
 const Fieldset = styled.fieldset`
   > label { 
     display: inline-block; 
-    width: 20%; 
+    width: 30%; 
   }
 
   > div { 
     display: inline-block; 
     position: relative;
-    width: 80%; 
+    width: 70%; 
     margin-bottom: 10px;
 
     > span {
@@ -57,6 +57,39 @@ const Fieldset = styled.fieldset`
     }
   }
 `
+const SubmitSection = styled.div`
+position: relative;
+height: 58px;
+padding: 10px 0;
+
+@media (max-width: 767px) {
+  height: auto;
+}
+
+> button {
+  width: 30%;
+  position: absolute;
+  right: 0;
+
+  @media (max-width: 767px) {
+    width: 100%;
+    position: static;
+  }
+}
+
+> div {
+  display: inline-block;
+  width: 68%;
+  height: 38px;
+  padding: 6px 15px;
+  margin: 0;
+
+  @media (max-width: 767px) {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+}
+`
 
 const renderField = ({ input, label, type, meta: { touched, error } }) => (
   <Fieldset>
@@ -70,9 +103,17 @@ const renderField = ({ input, label, type, meta: { touched, error } }) => (
 
 class Signup extends React.Component {
 
+  componentWillMount() {
+    this.props.clearError();
+  }
+
   handleFormSubmit({ email, password }) {
     this.props.signupUser({ email, password })
-    .then(() => { this.props.history.push('/')})
+    .then(() => { 
+      if (localStorage.getItem('x-auth')) {
+        this.props.history.push('/');
+      }
+    })
     .catch();
   }
 
@@ -95,8 +136,10 @@ class Signup extends React.Component {
         <Field type='text' name='email' component={renderField} label='Email:' />
         <Field type='password' name='password' component={renderField} label='Password:' />
         <Field type='password' name='password_confirm' component={renderField} label='Confirm Password:' />
-        {this.renderAlert()}
-        <button type='submit' className='btn btn-primary'>Sign Up</button>
+        <SubmitSection>
+          {this.renderAlert()}
+          <button type='submit' className='btn btn-primary'>Sign Up</button>
+        </SubmitSection>
       </Form>
     );
   }

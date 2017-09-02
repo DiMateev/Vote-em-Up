@@ -9,6 +9,7 @@ import App from './components/App';
 
 import reducers from './reducers';
 import { AUTH_USER } from './actions/types';
+import { fetchUserSurveys } from './actions';
 
 const createStoreWithMiddleware = applyMiddleware(reduxThunk)(createStore);
 const store = createStoreWithMiddleware(reducers);
@@ -19,6 +20,7 @@ const token = localStorage.getItem('x-auth');
 if (token) {
   // Update application state
   store.dispatch({ type: AUTH_USER });
+  fetchUserSurveys(token, store.dispatch);
 }
 
 ReactDOM.render(

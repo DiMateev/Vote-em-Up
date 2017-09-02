@@ -16,20 +16,25 @@ const Loader = styled.div`
   }
 `
 
-const LoaderHOC = (propName) => (WrappedComponent) => {
+const LoaderHOC = (propNames) => (WrappedComponent) => {
   return class LoaderHOC extends React.Component {
     isEmpty(prop) {
       return (
         prop === null ||
-        prop === undefined ||
-        (prop.hasOwnProperty('length') && prop.length === 0) ||
-        (prop.constructor === Object && Object.keys(prop).length === 0)
+        prop === undefined
       );
+    }
+
+    areEmpty(props) {
+      const ready = propNames.map(prop => !this.isEmpty(props[prop]));
+      return ready.every(item => item);
     }
 
     render() {
       return (
-        this.isEmpty(this.props[propName]) ? <Loader></Loader> : <WrappedComponent { ...this.props } />
+        this.areEmpty(this.props)
+          ? <WrappedComponent { ...this.props } />
+          : <Loader></Loader>
       );
     }
   }

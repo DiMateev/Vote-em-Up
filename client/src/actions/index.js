@@ -5,6 +5,8 @@ import {
   AUTH_USER, 
   UNAUTH_USER, 
   AUTH_ERROR,
+  CLEAR_ERROR,
+  UPDATE_USER,
   FETCH_SURVEYS,
   FETCH_OWN_SURVEYS,
   FETCH_SURVEY,
@@ -22,11 +24,30 @@ function handleGoodRequest(response ,dispatch) {
   localStorage.setItem('x-auth', response.data.token);
 }
 
+export function fetchUserSurveys(token, dispatch) {
+  axios.get(`${API_URL}/api/user`, {
+    headers: {
+      "x-auth": token
+    }
+  })
+    .then((res) => {
+      const { surveyList } = res.data;
+      dispatch({
+        type: UPDATE_USER,
+        payload: surveyList
+      });
+    })
+    .catch();
+}
+
 export function signinUser({ email, password }) {
   return function(dispatch) {
     // Submit email/password to the server
     return axios.post(`${API_URL}/api/user/signin`, { email, password })
-      .then(res => handleGoodRequest(res, dispatch))
+      .then(res => {
+        handleGoodRequest(res, dispatch);
+        fetchUserSurveys(res.data.token, dispatch);
+      })
       .catch(() => {
         // If request is bad...
         // - Show an error to user
@@ -47,6 +68,12 @@ export function authError(error) {
   return {
     type: AUTH_ERROR,
     payload: error
+  }
+}
+
+export function clearError() {
+  return {
+    type: CLEAR_ERROR
   }
 }
 
@@ -97,7 +124,9 @@ export function createSurvey({question, values}) {
       headers: {
         'x-auth': localStorage.getItem('x-auth')
       }
-    });
+    })
+      .then(fetchUserSurveys(localStorage.getItem('x-auth'), dispatch))
+      .catch();
   }
 }
 
@@ -109,22 +138,23 @@ export function handleVote({ optionIndex, surveyId }) {
       .then(response => {
         dispatch({
           type: UPDATE_SURVEY,
-          payload: response.data.survey
+          payload: response.data
         });
       })
       .catch();
   }
 }
 
-export function addNewOption({ option, surveyId }) {
+export function addNewOption({ option, optionIndex, surveyId }) {
   return function(dispatch) {
     axios.patch(`${API_URL}/api/survey/newVote/${surveyId}`, {
-      newOption: option
+      newOption: option,
+      optionIndex
     })
       .then(response => {
         dispatch({
           type: UPDATE_SURVEY,
-          payload: response.data.survey
+          payload: response.data
         });
       })
       .catch();

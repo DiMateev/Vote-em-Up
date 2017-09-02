@@ -46,6 +46,12 @@ exports.signin = (req, res, next) => {
   res.json({ token: tokenForUser(req.user) });
 }
 
-exports.authenticate = async (req, res, next) => {
+exports.authenticate = (req, res, next) => {
   const token = req.header('x-auth');
+}
+
+exports.fetchSurveyList = async (req, res, next) => {
+  const token = req.header('x-auth');
+  
+  res.json({ surveyList: req.user.surveys });
 }

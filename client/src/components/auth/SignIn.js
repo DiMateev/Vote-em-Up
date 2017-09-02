@@ -116,9 +116,18 @@ const renderField = ({ input, label, type, meta: { touched, error } }) => (
 );
 
 class Signin extends React.Component {
+
+  componentWillMount() {
+    this.props.clearError();
+  }
+
   handleFormSubmit({ email, password }) {
     this.props.signinUser({ email, password })
-      .then(() => { this.props.history.push('/')})
+      .then((response) => {
+        if (localStorage.getItem('x-auth')) {
+          this.props.history.push('/');
+        }
+      })
       .catch();
   }
 

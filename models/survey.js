@@ -11,7 +11,7 @@ const surveySchema = new Schema({
     required: true
   },
   options: [],
-  voters_ip: []
+  voters: []
 });
 
 surveySchema.statics.findByUserId = function(userId) {

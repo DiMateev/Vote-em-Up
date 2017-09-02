@@ -9,7 +9,8 @@ import {
 
 const initialState = {
   surveysList: [],
-  selectedSurvey: null
+  selectedSurvey: null,
+  request_ip: null
 }
 
 export default function(state = initialState, action) {
@@ -30,7 +31,8 @@ export default function(state = initialState, action) {
     case UPDATE_SURVEY:
       return {
         ...state,
-        selectedSurvey: action.payload
+        selectedSurvey: action.payload.survey,
+        request_ip: action.payload.ip
       };
     case DESELECT_SURVEY:
       return {
