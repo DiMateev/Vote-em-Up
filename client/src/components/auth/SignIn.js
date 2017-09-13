@@ -3,8 +3,14 @@ import { reduxForm, Field } from 'redux-form';
 import * as actions from '../../actions';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
+import hello from 'hellojs';
 
-const Form = styled.form`
+hello.init({
+  facebook: '875647265927332',
+  github: '6a001d01e80a0333be1a'
+});
+
+const FormContainer = styled.div`
   width: 60vw;
   padding: 25px 20px;
   margin: 20px auto;
@@ -12,8 +18,8 @@ const Form = styled.form`
   box-shadow: 1px 2px 4px grey;
 
   @media (max-width: 767px) {
-		width: 95vw;
-	}
+    width: 95vw;
+  }
 
   > h1 { 
     font-size: 1.8em;
@@ -131,6 +137,19 @@ class Signin extends React.Component {
       .catch();
   }
 
+  socialLogin(provider) {
+    hello(provider).login()
+      .then(res => {
+        console.log(res);
+        this.props.socialAuthenticate(res.network, res.authResponse.access_token)
+          .then((response) => {
+            if (localStorage.getItem('x-auth')) {
+              this.props.history.push('/');
+            }
+          })
+      });
+  }
+
   renderAlert() {
     if (this.props.errorMessage) {
       return (
@@ -145,18 +164,30 @@ class Signin extends React.Component {
     const { handleSubmit } = this.props;
 
     return (
-      <Form onSubmit={ handleSubmit(this.handleFormSubmit.bind(this)) }>
-        <h1>Sign In</h1>
-        <Field type='text' name='email' label='Email:' component={renderField} />
-        <Field type='password' name='password' label='Password:' component={renderField} />
-        <SubmitSection>
-          {this.renderAlert()}
-          <button action='submit' className='btn btn-primary'>Sign In</button>
-        </SubmitSection>
+      <FormContainer>
+        <form onSubmit={ handleSubmit(this.handleFormSubmit.bind(this)) }>
+          <h1>Sign In</h1>
+          <Field type='text' name='email' label='Email:' component={renderField} />
+          <Field type='password' name='password' label='Password:' component={renderField} />
+          <SubmitSection>
+            {this.renderAlert()}
+            <button action='submit' className='btn btn-primary'>Sign In</button>
+          </SubmitSection>
+        </form>
         <AlternativeSignIn>
           <span>Sign In With:</span>
+          <button onClick={() => { this.socialLogin('facebook') }} className="btn btn-primary">
+            <span className="fa fa-facebook"> Facebook</span>
+          </button>
+          <button onClick={() => { this.socialLogin('github') }} className="btn btn-primary">
+            <span className="fa fa-github"> GitHub</span>
+          </button>
+          <button onClick={() => { this.socialLogin('google+') }} className="btn btn-primary">
+            <span className="fa fa-google+"> Google+</span>
+          </button>
+          <button onClick={() => {hello('facebook').logout()}}>LogOut</button>
         </AlternativeSignIn>
-      </Form>
+      </FormContainer>
     );
   }
 }

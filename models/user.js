@@ -10,9 +10,12 @@ const userSchema = new Schema({
     lowercase: true,
     required: true
   },
-  password: {
-    type: String,
-    required: true
+  local: {
+    password: String
+  },
+  facebook: {
+    id: String,
+    name: String
   },
   surveys: []
 });
@@ -21,7 +24,8 @@ const userSchema = new Schema({
 // Before saving a model run this function
 userSchema.pre('save', function (next) {
   // get access to the user model
-  const user = this;
+  if (!this.local.password) { return next(); }
+  const user = this.local;
 
   // Generate a salt then run callback
   bcrypt.genSalt(10, (err, salt) => {
@@ -39,7 +43,7 @@ userSchema.pre('save', function (next) {
 });
 
 userSchema.methods.comparePasswords = function(candidatePassword, callback) {
-  bcrypt.compare(candidatePassword, this.password, (err, isMatch) => {
+  bcrypt.compare(candidatePassword, this.local.password, (err, isMatch) => {
     if (err) { return callback(err); }
 
     callback(null, isMatch);

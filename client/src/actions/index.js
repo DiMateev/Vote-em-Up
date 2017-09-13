@@ -56,6 +56,19 @@ export function signinUser({ email, password }) {
   }
 }
 
+export function socialAuthenticate(network, socialToken) {
+  return function(dispatch) {
+    return axios.post(`${API_URL}/api/oauth`, { network, socialToken })
+      .then(res => {
+        handleGoodRequest(res, dispatch);
+        fetchUserSurveys(res.data.token, dispatch);
+      })
+      .catch(err => {
+        dispatch(authError(err))}
+      );
+  };
+}
+
 export function signupUser({ email, password }) {
   return function(dispatch) {
     return axios.post(`${API_URL}/api/user/signup`, { email, password })
