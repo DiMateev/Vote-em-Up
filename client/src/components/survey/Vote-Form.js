@@ -45,11 +45,14 @@ class VoteForm extends React.Component {
     e.preventDefault();
     const surveyId = this.props.survey._id;
     const optionIndex = this.props.survey.options.length;
-    let option = window.prompt('Option you want to vote for:');
-    if (option) { option = option.trim(); }
+    let option = window.prompt('Option you want to vote for:').toString();
+    if (!option) { return false; }
+    option = option.trim();
     if (option.length > 0) {
       if (option.length > 35) { return alert('Option must be equal or less than 35 characters!'); }
       this.props.addNewOption({ option, optionIndex, surveyId });
+    } else {
+      return alert('Option must not be empty!');
     }
   }
 

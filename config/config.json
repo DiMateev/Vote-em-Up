@@ -7,8 +7,6 @@
   "development": {
     "PORT": 3001,
     "MONGODB_URI": "mongodb://localhost:27017/TheVotingApp",
-    "SECRET": "fhgsiofu3498f8y38fh3p82vp4yvfhsvlas9v",
-    "FACEBOOK_APP_ID": "875647265927332",
-    "FACEBOOK_APP_SECRET": "bc7186249f8bb0a9654979b366b1c384"
+    "SECRET": "fhgsiofu3498f8y38fh3p82vp4yvfhsvlas9v"
   }
 }

@@ -64,8 +64,8 @@ export function socialAuthenticate(network, socialToken) {
         fetchUserSurveys(res.data.token, dispatch);
       })
       .catch(err => {
-        dispatch(authError(err))}
-      );
+        dispatch(authError(err))
+      });
   };
 }
 

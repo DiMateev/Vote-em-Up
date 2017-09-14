@@ -20,6 +20,7 @@ function validateWithProvider(network, socialToken) {
       // Send a GET request to Facebook with the token as query string
       axios.get(`${providers[network].url}?fields=id,name,email&access_token=${socialToken}`)
         .then((response) => {
+          // console.log('PROFILE:', response);
           if (!response.error && response.status == 200) {
             resolve(response.data);
           } else {
@@ -77,8 +78,13 @@ exports.authenticateWithProvider = (req, res, next) => {
   const network = req.body.network;
   const socialToken = req.body.socialToken;
 
+  console.log(network, socialToken);
+
   // Validate the social token with Facebook
   validateWithProvider(network, socialToken).then(function (profile) {
+    console.log('-----====== PROFILE =====-----')
+    console.log(profile)
+    console.log('-----====== PROFILE =====-----')
     User.findOne({email: profile.email}, (err, user) => {
       if (err) return next(err);
 

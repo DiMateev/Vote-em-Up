@@ -5,6 +5,26 @@ import styled from 'styled-components';
 
 import * as actions from '../../actions';
 
+const FormContainer = styled.div`
+  width: 90vw;
+  margin: 30px auto;
+
+  > h1 {
+    text-align: center;
+    margin-bottom: 30px;
+  }
+
+  > form {
+    > button {
+      margin: 30px 20px 30px 0;
+    }
+  }
+
+  @media (max-width: 767px) {
+    width: 96vw;
+  }
+`
+
 const Fieldset = styled.fieldset`
   > label { 
     display: inline-block; 
@@ -70,7 +90,8 @@ class createSurvey extends React.Component {
     const { handleSubmit } = this.props;
     
     return (
-      <div>
+      <FormContainer>
+        <h1>Make a Survey</h1>
         <form onSubmit={handleSubmit(this.handleFormSubmit.bind(this))}>
           <Field 
             type='text' 
@@ -87,18 +108,32 @@ class createSurvey extends React.Component {
               label={`Option ${option}: `} 
               component={renderField} />
           )}
-          <button className='btn btn-secondary' onClick={this.addOption}>Add option</button>
+          <button className='btn btn-secondary' onClick={this.addOption}>Add an option</button>
           <button className='btn btn-primary' type='submit'>Post Survey</button>
         </form>
-      </div>
+      </FormContainer>
     )
   }
 }
 
 function validate(values) {
-  const error = {};
+  const errors = {};
 
-  return error;
+  if (!values.question) {
+    errors.question = 'Field is required!';
+  } else if (values.question.length < 7) {
+    errors.question = 'Really you can ask question in less then 7 symbols?!? "X or Y?"';
+  }
+  
+  if (!values.option1 || values.option1.trim().length < 1) {
+    errors.option1 = 'Field is required!';
+  }
+
+  if (!values.option2 || values.option2.trim().length < 1) {
+    errors.option2 = 'Field is required!';
+  }
+
+  return errors;
 }
 
 const createSurveyForm = reduxForm({

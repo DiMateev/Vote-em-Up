@@ -6,8 +6,7 @@ import styled from 'styled-components';
 import hello from 'hellojs';
 
 hello.init({
-  facebook: '875647265927332',
-  github: '6a001d01e80a0333be1a'
+  facebook: "875647265927332"
 });
 
 const FormContainer = styled.div`
@@ -138,9 +137,8 @@ class Signin extends React.Component {
   }
 
   socialLogin(provider) {
-    hello(provider).login()
+    hello(provider).login({scope: 'email'})
       .then(res => {
-        console.log(res);
         this.props.socialAuthenticate(res.network, res.authResponse.access_token)
           .then((response) => {
             if (localStorage.getItem('x-auth')) {
@@ -165,8 +163,8 @@ class Signin extends React.Component {
 
     return (
       <FormContainer>
+        <h1>Sign In</h1>
         <form onSubmit={ handleSubmit(this.handleFormSubmit.bind(this)) }>
-          <h1>Sign In</h1>
           <Field type='text' name='email' label='Email:' component={renderField} />
           <Field type='password' name='password' label='Password:' component={renderField} />
           <SubmitSection>
@@ -175,17 +173,10 @@ class Signin extends React.Component {
           </SubmitSection>
         </form>
         <AlternativeSignIn>
-          <span>Sign In With:</span>
+          <div>Sign In With: </div>
           <button onClick={() => { this.socialLogin('facebook') }} className="btn btn-primary">
             <span className="fa fa-facebook"> Facebook</span>
           </button>
-          <button onClick={() => { this.socialLogin('github') }} className="btn btn-primary">
-            <span className="fa fa-github"> GitHub</span>
-          </button>
-          <button onClick={() => { this.socialLogin('google+') }} className="btn btn-primary">
-            <span className="fa fa-google+"> Google+</span>
-          </button>
-          <button onClick={() => {hello('facebook').logout()}}>LogOut</button>
         </AlternativeSignIn>
       </FormContainer>
     );
