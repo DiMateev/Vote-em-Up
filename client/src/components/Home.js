@@ -44,7 +44,7 @@ const Body = styled.div`
 
 class Home extends React.Component {
   componentWillMount() {
-    if (this.props.survey.filter) {
+    if (this.props.survey.filter && this.props.auth.authenticated) {
       this.props.fetchMySurveys();
     } else {
       this.props.fetchAllSurveys();

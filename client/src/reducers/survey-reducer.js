@@ -10,7 +10,8 @@ import {
 const initialState = {
   surveysList: [],
   selectedSurvey: null,
-  request_ip: null
+  request_ip: null,
+  filter: false
 }
 
 export default function(state = initialState, action) {
@@ -41,13 +42,7 @@ export default function(state = initialState, action) {
       }
     case DELETE_SURVEY:
       const filteredList = state.surveysList
-        .filter(survey => {
-        if (survey._id !== action.payload) {
-          return survey;
-        } else {
-          return false;
-        }
-      });
+        .filter(survey => survey._id !== action.payload ? true : false);
 
       return {
         ...state,

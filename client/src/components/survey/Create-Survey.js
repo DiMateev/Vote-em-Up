@@ -81,6 +81,16 @@ class createSurvey extends React.Component {
   }
 
   handleFormSubmit({question, ...values}) {
+
+    const indexes = Object.keys(values);
+    console.log(values);
+    indexes.map((i) => {
+      values[i] = values[i].trim();
+      if (values[i].length < 1) { delete values[i] };
+      return values[i];
+    });
+    console.log(values);
+    
     this.props.createSurvey({question, values})
       .then((response) => this.props.history.push(`/survey/${response.data}`))
       .catch();
