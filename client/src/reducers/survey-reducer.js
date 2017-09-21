@@ -9,8 +9,8 @@ import {
 
 const initialState = {
   surveysList: [],
-  selectedSurvey: null,
-  request_ip: null,
+  selectedSurvey: undefined,
+  request_ip: undefined,
   filter: false
 }
 
@@ -30,6 +30,7 @@ export default function(state = initialState, action) {
       };
     case FETCH_SURVEY:
     case UPDATE_SURVEY:
+      console.log(action.payload);
       return {
         ...state,
         selectedSurvey: action.payload.survey,

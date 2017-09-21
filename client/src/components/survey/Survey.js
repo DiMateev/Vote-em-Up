@@ -44,7 +44,7 @@ const SurveyBody = styled.div`
   }
 
   > div.graph {
-    width: 68.5%;
+    width: 65.5%;
     padding: 1em;
     border: 1px solid rgb(220,220,220);
   }
@@ -86,6 +86,14 @@ const Vote = styled.div`
   > h4 { color: rgb(110,110,110); font-size: 1.5em; }
 `
 
+function extractIP(inputIP) {
+  if (inputIP.indexOf(',') > -1) {
+    let arr = inputIP.split(',');
+    return arr[arr.length - 1].slice(1);
+  }
+  return inputIP;
+}
+
 const VotedFor = (props) => {
   const { options, voters, index} = props;
   const optionIndex = voters[index].option;
@@ -98,9 +106,18 @@ const VotedFor = (props) => {
 }
 
 const Survey = (props) => {
+  if (!props.survey) { return (
+    <SurveyContainer>
+      <h1>Ooops...</h1>
+      <SurveyBody>
+        <h4>No survey with provided ID</h4>
+      </SurveyBody>
+    </SurveyContainer>);
+  }
   const { question, options, voters } = props.survey;
   const voters_ip = voters.map(voter => voter.ip);
-  const { userList, ip } = props;
+  let { userList, ip } = props;
+  ip = extractIP(ip);
   return (
     <SurveyContainer>
       <h1>{question}</h1>

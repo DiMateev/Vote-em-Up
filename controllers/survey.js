@@ -71,7 +71,18 @@ exports.deleteSurvey = async (req, res, next) => {
 exports.voteForOption = async (req, res, next) => {
   const optionIndex = req.body.optionIndex;
   const id = req.params.id;
-  const ip = req.headers['x-forwarded-for'] || '127.0.0.1';
+  let ip = req.headers['x-forwarded-for'] || '127.0.0.1';
+
+  function extractIP(inputIP) {
+    if (inputIP.indexOf(',') > -1) {
+      let arr = inputIP.split(',');
+      return arr[arr.length - 1].slice(1);
+    }
+    return inputIP;
+  }
+
+  ip = extractIP(ip);
+  
 
   if (!optionIndex && optionIndex !== 0) { return res.status(400).send(); }
 

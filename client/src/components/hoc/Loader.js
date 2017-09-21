@@ -18,12 +18,7 @@ const Loader = styled.div`
 
 const LoaderHOC = (propNames) => (WrappedComponent) => {
   return class LoaderHOC extends React.Component {
-    isEmpty(prop) {
-      return (
-        prop === null ||
-        prop === undefined
-      );
-    }
+    isEmpty = (prop) => prop === undefined;
 
     areEmpty(props) {
       const ready = propNames.map(prop => !this.isEmpty(props[prop]));
