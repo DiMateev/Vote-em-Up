@@ -1,3 +1,5 @@
+const {ObjectID} = require ('mongodb');
+
 const Survey = require('../models/survey');
 const User = require('../models/user');
 
@@ -43,9 +45,10 @@ exports.fetchAllSurveys = (req, res, next) => {
 
 exports.fetchSingleSurvey = (req, res, next) => {
   const id = req.params.id;
+  if (!ObjectID.isValid(id)) { return res.status(404).json({"error": "Not valid ID!"}); }
   const ip = req.headers['x-forwarded-for'] || '127.0.0.1';
   Survey.findById(id).then((survey) => {
-    if (!survey) { return res.status(404).json({"survey": "Not found!"}); }
+    if (!survey) { return res.status(404).json({"error": "Not found!"}); }
     return res.json({survey, ip});
   });
 }

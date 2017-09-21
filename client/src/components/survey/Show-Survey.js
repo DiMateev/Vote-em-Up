@@ -30,7 +30,6 @@ class showSurvey extends React.Component {
 }
 
 const mapStateToProps = (state) => {
-  console.log(state);
   return { survey: state.survey, user: state.auth };
 }
 
