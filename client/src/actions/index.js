@@ -116,7 +116,11 @@ export function fetchSurvey(id) {
           payload: response.data
         })
       })
-      .catch();
+      .catch((e) => {
+        dispatch({
+          type: FETCH_SURVEY
+        })
+      });
   }
 }
 

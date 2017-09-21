@@ -106,42 +106,45 @@ const VotedFor = (props) => {
 }
 
 const Survey = (props) => {
-  if (!props.survey) { return (
-    <SurveyContainer>
-      <h1>Ooops...</h1>
-      <SurveyBody>
-        <h4>No survey with provided ID</h4>
-      </SurveyBody>
-    </SurveyContainer>);
+  if (props.survey === 'Not Found!') { 
+    return (
+      <SurveyContainer>
+        <h1>Ooops...</h1>
+        <SurveyBody>
+          <h4>No survey with provided ID</h4>
+        </SurveyBody>
+      </SurveyContainer>
+    );
+  } else {
+    const { question, options, voters } = props.survey;
+    const voters_ip = voters.map(voter => voter.ip);
+    let { userList, ip } = props;
+    ip = extractIP(ip);
+    return (
+      <SurveyContainer>
+        <h1>{question}</h1>
+        <SurveyBody>
+          {
+            (userList.indexOf(props.survey._id) > -1)
+              ? <ResultsAggregate options={options} />
+              : ''
+          }
+          {
+            (voters_ip.indexOf(ip) > -1)
+              ? <VotedFor 
+                  options={props.survey.options}
+                  voters={props.survey.voters}
+                  index={voters_ip.indexOf(ip)} />
+              : <VoteForm survey={props.survey}/>
+          }
+          <div className='graph'>
+            <ResultsChart options={options} />
+          </div>
+          <footer>Share this survey with your friends: <span>{window.location.href}</span></footer>
+        </SurveyBody>
+      </SurveyContainer>
+    );
   }
-  const { question, options, voters } = props.survey;
-  const voters_ip = voters.map(voter => voter.ip);
-  let { userList, ip } = props;
-  ip = extractIP(ip);
-  return (
-    <SurveyContainer>
-      <h1>{question}</h1>
-      <SurveyBody>
-        {
-          (userList.indexOf(props.survey._id) > -1)
-            ? <ResultsAggregate options={options} />
-            : ''
-        }
-        {
-          (voters_ip.indexOf(ip) > -1)
-            ? <VotedFor 
-                options={props.survey.options}
-                voters={props.survey.voters}
-                index={voters_ip.indexOf(ip)} />
-            : <VoteForm survey={props.survey}/>
-        }
-        <div className='graph'>
-          <ResultsChart options={options} />
-        </div>
-        <footer>Share this survey with your friends: <span>{window.location.href}</span></footer>
-      </SurveyBody>
-    </SurveyContainer>
-  );
 }
 
 

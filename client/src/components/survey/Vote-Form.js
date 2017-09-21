@@ -18,15 +18,15 @@ const Fieldset = styled.fieldset`
   padding: 10px;
   margin-top: -1px;
 
-  > input { margin-right: 10px; }
-  > label { margin: 0; }
+  > input { margin-right: 10px; cursor: pointer; }
+  > label { margin: 0; cursor: pointer; }
 `
 
 const renderField = ({ input, label, type }) => {
   return (
     <Fieldset>
-      <input {...input} type={type} />
-      <label>{label}</label>
+      <input {...input} id={label} type={type} />
+      <label htmlFor={label}>{label}</label>
     </Fieldset>
   )
 };

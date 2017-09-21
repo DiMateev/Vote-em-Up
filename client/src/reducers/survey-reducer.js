@@ -30,7 +30,13 @@ export default function(state = initialState, action) {
       };
     case FETCH_SURVEY:
     case UPDATE_SURVEY:
-      console.log(action.payload);
+      if (!action.payload) {
+        return {
+          ...state,
+          selectedSurvey: 'Not Found!',
+          request_ip: ''
+        }
+      }
       return {
         ...state,
         selectedSurvey: action.payload.survey,

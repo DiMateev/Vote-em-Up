@@ -31,13 +31,13 @@ exports.createNew = async (req, res, next) => {
 exports.fetchUserSurveys = (req, res, next) => {
   const userId = req.user._id;
   Survey.findByUserId(userId).then((data) => {
-    return res.send({ data });
+    return res.json({ data });
   });
 }
 
 exports.fetchAllSurveys = (req, res, next) => {
   Survey.find({}).then((data) => {
-    return res.send({ data });
+    return res.json({ data });
   })
 }
 
@@ -45,7 +45,8 @@ exports.fetchSingleSurvey = (req, res, next) => {
   const id = req.params.id;
   const ip = req.headers['x-forwarded-for'] || '127.0.0.1';
   Survey.findById(id).then((survey) => {
-    return res.send({survey, ip});
+    if (!survey) { return res.status(404).json({"survey": "Not found!"}); }
+    return res.json({survey, ip});
   });
 }
 
